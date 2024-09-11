@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import { split } from "shamir";
 import { randomBytes } from 'node:crypto';
 
-async function main([KEY_PARTS_DIR]: string[]) {
+async function main([KEY_PARTS_DIR]: [string]) {
 	await fs.mkdir(KEY_PARTS_DIR, { recursive: true });
 
 	const PARTS = 3;
