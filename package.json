@@ -2,6 +2,14 @@
 	"name": "shamir-cli",
 	"module": "src/main.ts",
 	"type": "module",
+	"scripts": {
+		"generate-password:dev": "bun --hot ./src/generate-password.ts",
+		"generate-password:build": "bun build ./src/generate-password.ts --target bun --outfile dist/generate-password --compile --format esm --minify"
+	},
+	"dependencies": {
+		"shamir": "0.7.1",
+		"zod": "3.23.8"
+	},
 	"devDependencies": {
 		"@types/bun": "latest"
 	},
