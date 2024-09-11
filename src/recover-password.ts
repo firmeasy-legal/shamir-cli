@@ -8,17 +8,8 @@ async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string
 	const firstKeyPart = globalThis.atob(firstBase64KeyPart);
 	const secondKeyPart = globalThis.atob(secondBase64KeyPart);
 
-	const firstKeyPartBytes = new Uint8Array(firstKeyPart.length);
-
-	for (let i = 0; i < firstKeyPart.length; i++) {
-		firstKeyPartBytes[i] = firstKeyPart.charCodeAt(i);
-	}
-
-	const secondKeyPartBytes = new Uint8Array(secondKeyPart.length);
-
-	for (let i = 0; i < secondKeyPart.length; i++) {
-		secondKeyPartBytes[i] = secondKeyPart.charCodeAt(i);
-	}
+	const firstKeyPartBytes = new Uint8Array(firstKeyPart.split('').map(char => char.charCodeAt(0)));
+	const secondKeyPartBytes = new Uint8Array(secondKeyPart.split('').map(char => char.charCodeAt(0)));
 
 	const recovered = join({
 		"1": firstKeyPartBytes,
