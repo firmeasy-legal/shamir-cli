@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { combine } from "shamir-secret-sharing";
+import path from "node:path";
 
 async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string]) {
 	const firstBase64KeyPart = await Bun.file(FIRST_KEY_PART_PATH).text();
@@ -27,11 +28,13 @@ main(
 		z
 			.string()
 			.min(1)
-			.regex(/^[^\0]+$/, "Invalid pathname"),
+			.regex(/^[^\0]+$/, "Invalid pathname")
+			.transform(pathname => path.normalize(pathname)),
 		z
 			.string()
 			.min(1)
-			.regex(/^[^\0]+$/, "Invalid pathname"),
+			.regex(/^[^\0]+$/, "Invalid pathname")
+			.transform(pathname => path.normalize(pathname)),
 	])
 		.parse(process.argv.slice(2))
 );
