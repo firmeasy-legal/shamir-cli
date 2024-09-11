@@ -1,7 +1,7 @@
 import { z } from "zod";
 import fs from "node:fs/promises";
 import { split } from "shamir-secret-sharing";
-import { randomBytes } from 'node:crypto';
+import crypto from 'node:crypto';
 
 async function main([KEY_PARTS_DIR]: [string]) {
 	await fs.mkdir(KEY_PARTS_DIR, { recursive: true });
@@ -10,7 +10,10 @@ async function main([KEY_PARTS_DIR]: [string]) {
 	const QUORUM = 2;
 
 	const utf8Encoder = new TextEncoder();
-	const randomPassword = Math.random().toString(36).slice(2);
+
+	const randomBytes = crypto.randomBytes(8);
+	const randomPassword = randomBytes.toString('base64');
+
 	const passwordBytes = utf8Encoder.encode(randomPassword);
 
 	const shares = await split(passwordBytes, PARTS, QUORUM)
