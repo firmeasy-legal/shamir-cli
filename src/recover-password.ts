@@ -1,7 +1,5 @@
 import { z } from "zod";
-import fs from "node:fs/promises";
 import { join } from "shamir";
-import { randomBytes } from 'node:crypto';
 
 async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string]) {
 	const firstBase64KeyPart = await Bun.file(FIRST_KEY_PART_PATH).text();
@@ -22,13 +20,13 @@ async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string
 		secondKeyPartBytes[i] = secondKeyPart.charCodeAt(i);
 	}
 
-	const recoveredPassword = join({
-		"0": firstKeyPartBytes,
-		"1": secondKeyPartBytes,
+	const recovered = join({
+		"1": firstKeyPartBytes,
+		"2": secondKeyPartBytes,
 	});
 
 	const utf8Decoder = new TextDecoder();
-	const password = utf8Decoder.decode(recoveredPassword);
+	const password = utf8Decoder.decode(recovered);
 
 	console.log(password);
 }
