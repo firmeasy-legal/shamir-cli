@@ -1,6 +1,6 @@
 import { z } from "zod";
 import fs from "node:fs/promises";
-import { split } from "shamir";
+import { split } from "shamir-secret-sharing";
 import { randomBytes } from 'node:crypto';
 
 async function main([KEY_PARTS_DIR]: [string]) {
@@ -13,12 +13,12 @@ async function main([KEY_PARTS_DIR]: [string]) {
 	const randomPassword = Math.random().toString(36).slice(2);
 	const passwordBytes = utf8Encoder.encode(randomPassword);
 
-	const asciiKeyParts = Object.values(split(randomBytes, PARTS, QUORUM, passwordBytes))
+	const shares = await split(passwordBytes, PARTS, QUORUM)
 
 	let keyPartIndex = 1;
-	for (const asciiKeyPart of asciiKeyParts) {
+	for (const share of shares) {
 		const keyPart = Array
-			.from(asciiKeyPart)
+			.from(share)
 			.map((byte) => String.fromCharCode(byte))
 			.join('')
 

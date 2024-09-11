@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { join } from "shamir";
+import { combine } from "shamir-secret-sharing";
 
 async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string]) {
 	const firstBase64KeyPart = await Bun.file(FIRST_KEY_PART_PATH).text();
@@ -11,10 +11,10 @@ async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string
 	const firstKeyPartBytes = new Uint8Array(firstKeyPart.split('').map(char => char.charCodeAt(0)));
 	const secondKeyPartBytes = new Uint8Array(secondKeyPart.split('').map(char => char.charCodeAt(0)));
 
-	const recovered = join({
-		"1": firstKeyPartBytes,
-		"2": secondKeyPartBytes,
-	});
+	const recovered = await combine([
+		firstKeyPartBytes,
+		secondKeyPartBytes,
+	]);
 
 	const utf8Decoder = new TextDecoder();
 	const password = utf8Decoder.decode(recovered);

@@ -9,7 +9,7 @@
 		"recover-password:build": "bun build ./src/recover-password.ts --target bun --outfile dist/recover-password --compile --format esm --minify"
 	},
 	"dependencies": {
-		"shamir": "0.7.1",
+		"shamir-secret-sharing": "0.0.3",
 		"zod": "3.23.8"
 	},
 	"devDependencies": {
