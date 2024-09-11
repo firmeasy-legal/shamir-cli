@@ -3,17 +3,8 @@ import fs from "node:fs/promises";
 import { split } from "shamir";
 import { randomBytes } from 'node:crypto';
 
-const schema = z
-	.string()
-	.min(1)
-	.regex(/^[^\0]+$/, "Invalid directory path");
-
-async function main(args: string[]) {
-	const [KEY_PARTS_DIR] = args
-
-	const keyPartsDir = await schema.parseAsync(KEY_PARTS_DIR);
-
-	await fs.mkdir(keyPartsDir, { recursive: true });
+async function main([KEY_PARTS_DIR]: string[]) {
+	await fs.mkdir(KEY_PARTS_DIR, { recursive: true });
 
 	const PARTS = 3;
 	const QUORUM = 2;
@@ -33,10 +24,18 @@ async function main(args: string[]) {
 
 		const base64KeyPart = globalThis.btoa(keyPart);
 
-		await fs.writeFile(`${keyPartsDir}/key-${keyPartIndex.toString().padStart(2, "0")}.share`, base64KeyPart);
+		await fs.writeFile(`${KEY_PARTS_DIR}/key-${keyPartIndex.toString().padStart(2, "0")}.share`, base64KeyPart);
 
 		keyPartIndex++;
 	}
 }
 
-main(process.argv.slice(2));
+main(
+	z.tuple([
+		z
+			.string()
+			.min(1)
+			.regex(/^[^\0]+$/, "Invalid directory path")
+	])
+		.parse(process.argv.slice(2))
+);
