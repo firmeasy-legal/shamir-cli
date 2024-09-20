@@ -1,10 +1,55 @@
 import { z } from "zod";
 import { combine } from "shamir-secret-sharing";
-import path from "node:path";
+import { input } from "@inquirer/prompts";
 
-async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string]) {
-	const firstBase64KeyPart = await Bun.file(FIRST_KEY_PART_PATH).text();
-	const secondBase64KeyPart = await Bun.file(SECOND_KEY_PART_PATH).text();
+async function main() {
+	const KeyPartSchema = z.string().min(1).base64();
+
+	const firstBase64KeyPart = await input({
+		message: 'Enter one key part: ',
+		validate: (input) => {
+			const validation = KeyPartSchema.safeParse(input);
+
+			if (validation.success) {
+				return true;
+			}
+
+			return validation.error.issues[0].message;
+		}
+	});
+
+	let secondBase64KeyPart = await input({
+		message: 'Enter another key part: ',
+		validate: (input) => {
+			const validation = KeyPartSchema
+				.length(firstBase64KeyPart.length)
+				.safeParse(input);
+
+			if (validation.success) {
+				return true;
+			}
+
+			return validation.error.issues[0].message;
+		}
+	});
+
+	while (secondBase64KeyPart === firstBase64KeyPart) {
+		console.error('The second key part must be different from the first one');
+		secondBase64KeyPart = await input({
+			message: 'Enter another key part: ',
+			validate: (input) => {
+				const validation = KeyPartSchema
+					.length(firstBase64KeyPart.length)
+					.safeParse(input);
+
+				if (validation.success) {
+					return true;
+				}
+
+				return validation.error.issues[0].message;
+			}
+		});
+	}
 
 	const firstKeyPart = globalThis.atob(firstBase64KeyPart);
 	const secondKeyPart = globalThis.atob(secondBase64KeyPart);
@@ -23,18 +68,4 @@ async function main([FIRST_KEY_PART_PATH, SECOND_KEY_PART_PATH]: [string, string
 	console.log(password);
 }
 
-main(
-	z.tuple([
-		z
-			.string()
-			.min(1)
-			.regex(/^[^\0]+$/, "Invalid pathname")
-			.transform(pathname => path.normalize(pathname)),
-		z
-			.string()
-			.min(1)
-			.regex(/^[^\0]+$/, "Invalid pathname")
-			.transform(pathname => path.normalize(pathname)),
-	])
-		.parse(process.argv.slice(2))
-);
+main();
