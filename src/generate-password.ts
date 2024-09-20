@@ -3,9 +3,9 @@ import fs from "node:fs/promises";
 import { split } from "shamir-secret-sharing";
 import crypto from 'node:crypto';
 
-async function main([KEY_PARTS_DIR]: [string | null]) {
-	if (KEY_PARTS_DIR) {
-		await fs.mkdir(KEY_PARTS_DIR, { recursive: true });
+async function main([keyPartsDir]: [string | null]) {
+	if (keyPartsDir) {
+		await fs.mkdir(keyPartsDir, { recursive: true });
 	}
 
 	const PARTS = 3;
@@ -29,8 +29,8 @@ async function main([KEY_PARTS_DIR]: [string | null]) {
 
 		const base64KeyPart = globalThis.btoa(keyPart);
 
-		if (KEY_PARTS_DIR) {
-			await fs.writeFile(`${KEY_PARTS_DIR}/key-${keyPartIndex.toString().padStart(2, "0")}.share`, base64KeyPart);
+		if (keyPartsDir) {
+			await fs.writeFile(`${keyPartsDir}/key-${keyPartIndex.toString().padStart(2, "0")}.share`, base64KeyPart);
 		} else {
 			console.log(base64KeyPart);
 		}
