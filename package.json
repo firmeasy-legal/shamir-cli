@@ -4,11 +4,11 @@
   "type": "module",
   "scripts": {
     "generate-password:dev": "bun --hot ./src/generate-password.ts",
-    "generate-password:build": "bun build ./src/generate-password.ts --target bun --outfile dist/generate-password --compile --format esm --minify",
+    "generate-password:build": "bun build ./src/generate-password.ts --target bun --outfile dist/generate-password.js --format esm --minify",
     "split-password:dev": "bun --hot ./src/split-password.ts",
-    "split-password:build": "bun build ./src/split-password.ts --target bun --outfile dist/split-password --compile --format esm --minify",
+    "split-password:build": "bun build ./src/split-password.ts --target bun --outfile dist/split-password.js --format esm --minify",
     "recover-password:dev": "bun --hot ./src/recover-password.ts",
-    "recover-password:build": "bun build ./src/recover-password.ts --target bun --outfile dist/recover-password --compile --format esm --minify"
+    "recover-password:build": "bun build ./src/recover-password.ts --target bun --outfile dist/recover-password.js --format esm --minify"
   },
   "dependencies": {
     "@inquirer/prompts": "^6.0.1",
