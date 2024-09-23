@@ -19,10 +19,14 @@ async function main() {
 		}
 	});
 
-	const askSecondKeyPart = () => password({
+	const secondBase64KeyPart = await password({
 		message: 'Enter another key part: ',
 		mask: true,
 		validate: (input) => {
+			if (input === firstBase64KeyPart) {
+				return "The second key part must be different from the first one.";
+			}
+
 			const validation = KeyPartSchema
 				.length(firstBase64KeyPart.length)
 				.safeParse(input);
@@ -34,13 +38,6 @@ async function main() {
 			return validation.error.issues[0].message;
 		}
 	});
-
-	let secondBase64KeyPart = await askSecondKeyPart();
-
-	while (secondBase64KeyPart === firstBase64KeyPart) {
-		console.error('The second key part must be different from the first one');
-		secondBase64KeyPart = await askSecondKeyPart();
-	}
 
 	const firstKeyPart = globalThis.atob(firstBase64KeyPart);
 	const secondKeyPart = globalThis.atob(secondBase64KeyPart);
