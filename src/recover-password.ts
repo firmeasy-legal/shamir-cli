@@ -1,12 +1,13 @@
-import { z } from "zod";
 import { combine } from "shamir-secret-sharing";
-import { input } from "@inquirer/prompts";
+import { password } from "@inquirer/prompts";
+import { z } from "zod";
 
 async function main() {
 	const KeyPartSchema = z.string().min(1).base64();
 
-	const firstBase64KeyPart = await input({
+	const firstBase64KeyPart = await password({
 		message: 'Enter one key part: ',
+		mask: true,
 		validate: (input) => {
 			const validation = KeyPartSchema.safeParse(input);
 
@@ -18,8 +19,9 @@ async function main() {
 		}
 	});
 
-	const askSecondKeyPart = () => input({
+	const askSecondKeyPart = () => password({
 		message: 'Enter another key part: ',
+		mask: true,
 		validate: (input) => {
 			const validation = KeyPartSchema
 				.length(firstBase64KeyPart.length)
@@ -52,9 +54,9 @@ async function main() {
 	]);
 
 	const utf8Decoder = new TextDecoder();
-	const password = utf8Decoder.decode(recovered);
+	const decodedPassword = utf8Decoder.decode(recovered);
 
-	console.log(password);
+	console.log(decodedPassword);
 }
 
 main();
