@@ -8,7 +8,9 @@
     "split-password:dev": "bun --hot ./src/split-password.ts",
     "split-password:build": "bun build ./src/split-password.ts --target bun --outfile dist/split-password.js --format esm --minify",
     "recover-password:dev": "bun --hot ./src/recover-password.ts",
-    "recover-password:build": "bun build ./src/recover-password.ts --target bun --outfile dist/recover-password.js --format esm --minify"
+    "recover-password:build": "bun build ./src/recover-password.ts --target bun --outfile dist/recover-password.js --format esm --minify",
+    "regenerate-password:dev": "bun --hot ./src/regenerate-password.ts",
+    "regenerate-password:build": "bun build ./src/regenerate-password.ts --target bun --outfile dist/regenerate-password.js --format esm --minify"
   },
   "dependencies": {
     "@inquirer/prompts": "^6.0.1",
